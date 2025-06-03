@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Story - Martini Glass Narrative</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#context">Context</a></li>
+            <li><a href="#viz1">Visualization 1</a></li>
+            <li><a href="#viz2">Visualization 2</a></li>
+            <li><a href="#viz3">Visualization 3</a></li>
+            <li><a href="#conclusion">Conclusion</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="hero-content">
+            <h1 class="beam-text">Data Story Title</h1>
+            <p class="subtitle">Use the martini glass narrative</p>
+        </div>
+        <div class="scroll-indicator">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2l-8 8h5v8h6v-8h5l-8-8z" transform="rotate(180 12 12)" />
+            </svg>
+        </div>
+    </section>
+
+    <!-- Context Section -->
+    <section id="context">
+        <div class="container">
+            <div class="story-section">
+                <h2>Setting the Scene</h2>
+                <p class="narrative-text">
+                    Here we lay out the context for our user...
+                </p>
+                <p class="narrative-text">
+                    Replace this section with our dataset info...
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visualization 1 -->
+    <section id="viz1">
+        <div class="container">
+            <div class="story-section">
+                <h2>Visualization 1: Overview</h2>
+                <p class="narrative-text">
+                    This visualization provides a high-level view of the dataset...
+                </p>
+                <div class="viz-container two-charts">
+                    <canvas id="barChartWomen" width="400" height="200"></canvas>
+                    <canvas id="barChartMen" width="400" height="200"></canvas>
+                </div>                  
+            </div>
+        </div>
+    </section>
+
+    <!-- Visualization 2 -->
+    <section id="viz2">
+        <div class="container">
+            <div class="story-section">
+                <h2>Visualization 2: Focused Insight</h2>
+                <p class="narrative-text">
+                    This section explores...
+                </p>
+                <!-- The the major select filter-->
+                <label for="major-select">Select Major:</label>
+                <select id="major-select">
+                <option value="all">All Majors</option>
+                </select>
+                <div class="viz-container">
+                    <div id="sankey-chart" style="width: 100%; height: 600px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visualization 3 -->
+    <section id="viz3">
+        <div class="container">
+            <div class="story-section">
+                <h2>Visualization 3: Deeper Dive</h2>
+                <p class="narrative-text">
+                    Our advanced visualization here...
+                </p>
+                <div class="viz-container">
+                    <div id="treemap"></div>
+                    <div id="tooltip"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion -->
+    <section id="conclusion">
+        <div class="container">
+            <div class="story-section">
+                <h2>Conclusion & Reflection</h2>
+                <p class="narrative-text">
+                    Wrapping up the story...
+                </p>
+            </div>
+        </div>
+    </section>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="main.js"></script>
+</body>
+</html>
+
