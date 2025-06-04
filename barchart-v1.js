@@ -32,13 +32,34 @@ export async function drawWomenAndMenBarCharts() {
           plugins: {
             title: {
               display: true,
-              text: 'Top 10 Majors by Number of Women'
+              text: 'Top 10 Majors by Number of Women',
+              color: '#fff',
+              font: {size : 16}
             },
             legend: { display: false }
           },
           scales: {
-            x: { beginAtZero: true }
-          }
+            x: { 
+              beginAtZero: true,
+              ticks: { color: '#fff' }, // <-- color of x-axis tick labels
+              title: {
+              display: true,
+              text: 'Major',
+              color: '#fff',            // x-axis title color
+              font: { size: 16 }
+              }
+
+             },
+              y: {
+              ticks: { color: '#fff' },   // y-axis tick label color
+              title: {
+              display: true,
+              text: 'Number of Women',
+              color: '#fff',           // y-axis title color
+              font: { size: 16 }
+            }
+            }
+          },
         }
       });
     };
@@ -64,12 +85,33 @@ export async function drawWomenAndMenBarCharts() {
           plugins: {
             title: {
               display: true,
-              text: 'Top 10 Majors by Number of Men'
+              text: 'Top 10 Majors by Number of Men',
+              color: '#fff',
+              font: { size: 16}
             },
             legend: { display: false }
           },
           scales: {
-            x: { beginAtZero: true }
+            x: { 
+              beginAtZero: true,
+              ticks: { color: '#fff' }, // <-- color of x-axis tick labels
+              title: {
+              display: true,
+              text: 'Major',
+              color: '#fff',            // x-axis title color
+              font: { size: 16 }
+              }
+
+             },
+              y: {
+              ticks: { color: '#fff' },   // y-axis tick label color
+              title: {
+              display: true,
+              text: 'Number of Men',
+              color: '#fff',           // y-axis title color
+              font: { size: 16 }
+            }
+            } 
           }
         }
       });

@@ -61,7 +61,7 @@ const extendedPastelBrightPalette = [
         .sort((a, b) => b.value - a.value);
   
       // Treemap layout
-      const width = 1300, height = 900;
+      const width = 1400, height = 1300; //changing height can cause cutoff
   
       // Custom tiling to make space for labels
       const labelHeight = 20;
