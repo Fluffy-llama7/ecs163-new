@@ -1,12 +1,10 @@
 export function drawSankeyChart() {
     d3.csv("recent-grads.csv", d3.autoType).then(data => {
-      // Filter only Agriculture & Natural Resources majors
       const categoryName = "Agriculture & Natural Resources";
       const agMajors = data.filter(d => d.Major_category === categoryName);
   
-      // Create dropdown for majors inside #major-select container
       const select = d3.select("#major-select");
-      select.selectAll("option").remove(); // clear existing options
+      select.selectAll("option").remove();
   
       select.append("option")
         .attr("value", "all")
@@ -18,16 +16,13 @@ export function drawSankeyChart() {
           .text(d.Major);
       });
   
-      // Initial draw with all majors highlighted
       drawSankey("all");
   
-      // On dropdown change, redraw the Sankey with selected major
       select.on("change", function() {
         drawSankey(this.value);
       });
   
       function drawSankey(selectedMajor) {
-        // Clear previous svg
         d3.select("#sankey-chart").select("svg").remove();
   
         const nodes = [];
@@ -44,19 +39,15 @@ export function drawSankeyChart() {
   
         const statusNodes = ["Employed", "Unemployed", "College Job", "Non-college Job"];
   
-        // Add fixed nodes
         getNodeIndex(categoryName);
         statusNodes.forEach(getNodeIndex);
   
-        // Add majors and links for all majors
         agMajors.forEach(d => {
           const major = d.Major;
           const majorIdx = getNodeIndex(major);
   
-          // Category -> Major
           links.push({ source: getNodeIndex(categoryName), target: majorIdx, value: d.Total });
   
-          // Major -> Employment Status
           const emp = d.Employed ?? 0;
           const unemp = d.Unemployed ?? 0;
   
@@ -66,7 +57,6 @@ export function drawSankeyChart() {
           links.push({ source: majorIdx, target: empIdx, value: emp });
           links.push({ source: majorIdx, target: unempIdx, value: unemp });
   
-          // Employed -> College/Non-college Job
           const collegeJobIdx = getNodeIndex("College Job");
           const nonCollegeJobIdx = getNodeIndex("Non-college Job");
   
@@ -106,29 +96,15 @@ export function drawSankeyChart() {
   
         d3.select("svg").style("background-color", "#1e1e1e");
   
-        // The Highlight logic here: links & nodes connected to selected major will have opacity 1
         function isLinkHighlighted(link) {
           if (selectedMajor === "all") return true;
-  
-          // Highlight if source or target is the selected major 
           if (link.source.name === selectedMajor || link.target.name === selectedMajor) return true;
-  
-          // Also highlight category!!
           if (link.source.name === categoryName && link.target.name === selectedMajor) return true;
-  
-          // Highlight links connecting the employment status to the selected major
           if (link.source.name === selectedMajor && (link.target.name === "Employed" || link.target.name === "Unemployed")) return true;
-  
-          // Highlight employed → college/non-college job for selected major
-          if (link.source.name === "Employed") {
-            // Check if major's employed count > 0 and this link is college/non-college job
-            return true;
-          }
-  
+          if (link.source.name === "Employed") return true;
           return false;
         }
   
-        // Draw links
         svg.append("g")
           .attr("fill", "none")
           .attr("stroke-opacity", 0.9)
@@ -140,7 +116,6 @@ export function drawSankeyChart() {
           .attr("stroke-width", d => Math.max(1, d.width))
           .attr("opacity", d => isLinkHighlighted(d) ? 1 : 0.1);
   
-        // Draw nodes
         const node = svg.append("g")
           .selectAll("g")
           .data(sankeyData.nodes)
@@ -155,25 +130,48 @@ export function drawSankeyChart() {
           .attr("stroke", "#333")
           .attr("fill-opacity", d => {
             if (selectedMajor === "all") return 1;
-            // Highlight category, status nodes always
             if ([categoryName, "Employed", "Unemployed", "College Job", "Non-college Job"].includes(d.name)) return 1;
-            // Highlight selected major node
             return d.name === selectedMajor ? 1 : 0.1;
           });
   
-        node.append("text")
-          .attr("x", d => d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6)
-          .attr("y", d => (d.y1 + d.y0) / 2)
-          .attr("dy", "0.35em")
-          .attr("text-anchor", d => d.x0 < width / 2 ? "start" : "end")
-          .text(d => d.name)
-          .style("fill", "#f0f0f0")
-          .style("font-size", "12px")
+        const label = node.append("g")
+          .attr("transform", d => `translate(${d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6}, ${(d.y1 + d.y0) / 2})`)
+          .attr("text-anchor", d => d.x0 < width / 2 ? "start" : "end");
+  
+        label.append("rect")
+          .attr("x", d => d.x0 < width / 2 ? 0 : -getTextWidth(d.name, "14px sans-serif") - 6)
+          .attr("y", -10)
+          .attr("width", d => getTextWidth(d.name, "14px sans-serif") + 6)
+          .attr("height", 20)
+          .attr("fill", "rgba(30,30,30,0.7)")
+          .attr("rx", 3)
+          .attr("ry", 3)
           .attr("opacity", d => {
             if (selectedMajor === "all") return 1;
             if ([categoryName, "Employed", "Unemployed", "College Job", "Non-college Job"].includes(d.name)) return 1;
             return d.name === selectedMajor ? 1 : 0.1;
           });
+  
+        label.append("text")
+          .text(d => d.name)
+          .attr("dy", "0.35em")
+          .style("fill", "#fff")
+          .style("font-size", "14px")
+          .style("font-weight", "500")
+          .attr("opacity", d => {
+            if (selectedMajor === "all") return 1;
+            if ([categoryName, "Employed", "Unemployed", "College Job", "Non-college Job"].includes(d.name)) return 1;
+            return d.name === selectedMajor ? 1 : 0.1;
+          });
+      }
+  
+      // Helper to measure text width for background boxes
+      function getTextWidth(text, font) {
+        const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+        const context = canvas.getContext("2d");
+        context.font = font;
+        const metrics = context.measureText(text);
+        return metrics.width;
       }
     });
   }

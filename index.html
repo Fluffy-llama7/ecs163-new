@@ -6,8 +6,14 @@
     <title>Data Story - Martini Glass Narrative</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@300;400;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: 'Source Serif Pro', serif;
+      }
+      
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -75,10 +81,13 @@
                     This Sankey Diagram visualizes the pathways from college majors within the <i>Agriculture & Natural Resources </i> field of study to various employment outcomes. Each flow represents how graduates from these majors move into unemployment, employment, or further into other college-related/non-college-related jobs. Using the dropdown menu below, you can highlight a specific major and see how its outcomes differ from others. This visualization helps reveal both the diversity of post-grad pathways and the relative size scaling of each outcome, offering deeper insights into the real-world implications of choosing a major from this field of study.
                 </p>
                 <!-- The the major select filter-->
-                <label for="major-select">Select Major:</label>
-                <select id="major-select">
-                <option value="all">All Majors</option>
-                </select>
+                <div class="major-filter">
+                    <label for="major-select">Select Major:</label>
+                    <select id="major-select">
+                      <option value="all">All Majors</option>
+                    </select>
+                  </div>
+                  
                 <div class="viz-container">
                     <div id="sankey-chart" style="width: 100%; height: 600px;"></div>
                 </div>
@@ -121,4 +130,3 @@
     <script type="module" src="main.js"></script>
 </body>
 </html>
-

@@ -55,13 +55,12 @@ const extendedPastelBrightPalette = [
         }))
       };
   
-      // Create hierarchy and sum values (treemap uses the sum to size the rectangles)
       const hierarchy = d3.hierarchy(root)
         .sum(d => d.value)
         .sort((a, b) => b.value - a.value);
   
       // Treemap layout
-      const width = 1400, height = 1300; //changing height can cause cutoff
+      const width = 1400, height = 1300; //Dimensions
   
       // Custom tiling to make space for labels
       const labelHeight = 20;
@@ -118,84 +117,107 @@ const extendedPastelBrightPalette = [
         .attr("stroke", "#888")
         .attr("stroke-width", 0)
         .style("cursor", "pointer")
+
+
         .on("click", function(event, d) {
-          if (selectedRect === this) {
-            d3.select("#tooltip").style("display", "none");
-            d3.select(this).attr("stroke-width", 0);
-            selectedRect = null;
-            return;
-          }
-          d3.selectAll("rect").attr("stroke-width", 0);
-          d3.select(this)
-            .attr("stroke", d => {
-              const base = d3.hsl(categoryColorScale(d.parent.data.name));
-              return d3.hsl(base.h, base.s, lightness(d.data.median) + 0.25).formatHsl();
-            })
-            .attr("stroke-width", 4);
-  
-          d3.select("#tooltip")
-            .style("display", "block")
-            .html(`<strong>${d.data.name}</strong><br><br>
-                  <div><strong>Category:</strong> ${d.parent.data.name}</div><br><br>
-                  <div><strong>Total:</strong> ${d.value.toLocaleString()} people</div><br><br>
-                  <div><strong>Median:</strong> $${d.data.median.toLocaleString()}</div><br><br>
-                  <div><strong>25th Percentile:</strong> $${d.data.p25.toLocaleString()}</div><br><br>
-                  <div><strong>75th Percentile:</strong> $${d.data.p75.toLocaleString()}</div><br><br>
-                  <div id="piechart"></div>
-            `);
-  
-          d3.select("#piechart").selectAll("*").remove();
-  
-          const pieData = [
-            {label: "Employed", value: d.data.employed || 1},
-            {label: "Unemployed", value: d.data.unemployed || 1}
-          ];
-  
-          const total_employ = d.data.employed + d.data.unemployed;
-          const pieDataStr = [
-            {label: "Employed", value: ((d.data.employed / total_employ) * 100).toFixed(2) + "%" || 1},
-            {label: "Unemployed", value: ((d.data.unemployed / total_employ) * 100).toFixed(2) + "%" || 1}
-          ];
-  
-          const w = 120, h = 120, r = 50;
-          const pieSvg = d3.select("#tooltip #piechart")
-            .append("svg")
-            .attr("width", w)
-            .attr("height", h)
-            .append("g")
-            .attr("transform", `translate(${w/2},${h/2})`);
-  
-          const pie = d3.pie().value(d => d.value);
-          const arc = d3.arc().innerRadius(0).outerRadius(r);
-  
-          pieSvg.selectAll("path")
-            .data(pie(pieData))
-            .enter()
-            .append("path")
-            .attr("d", arc)
-            .attr("fill", (d, i) => d3.schemeCategory10[i]);
-  
-          const legend = d3.select("#tooltip #piechart")
-            .selectAll("div")
-            .data(pieDataStr)
-            .enter()
-            .append("div")
-            .style("display", "flex")
-            .style("align-items", "center")
-            .style("margin-bottom", "6px");
-  
-          legend.append("span")
-            .style("display", "inline-block")
-            .style("width", "16px")
-            .style("height", "16px")
-            .style("margin-right", "8px")
-            .style("background", (d, i) => d3.schemeCategory10[i]);
-  
-          legend.append("span")
-            .text(d => `${d.label}: ${d.value}`);
-  
-          selectedRect = this;
-        });
+            if (selectedRect === this) {
+                d3.select("#tooltip").style("display", "none");
+                d3.select(this).attr("stroke-width", 0);
+                selectedRect = null;
+                return;
+            }
+
+            d3.selectAll("rect").attr("stroke-width", 0);
+            d3.select(this)
+                .attr("stroke", d => {
+                const base = d3.hsl(categoryColorScale(d.parent.data.name));
+                return d3.hsl(base.h, base.s, lightness(d.data.median) + 0.25).formatHsl();
+                })
+                .attr("stroke-width", 4);
+
+                const tooltipWidth = 260;
+                const tooltipHeight = 200;
+                
+                let left = event.clientX + 20;
+                let top = event.clientY + 20;
+                
+                // Prevent right overflow
+                if (left + tooltipWidth > window.innerWidth) {
+                    left = event.clientX - tooltipWidth - 20;
+                }
+                
+                // Prevent bottom overflow
+                if (top + tooltipHeight > window.innerHeight) {
+                    top = event.clientY - tooltipHeight - 20;
+                }
+                
+
+            d3.select("#tooltip")
+                .style("display", "block")
+                .style("left", `${left}px`)
+                .style("top", `${top}px`)
+                .html(`<strong>${d.data.name}</strong><br><br>
+                <div><strong>Category:</strong> ${d.parent.data.name}</div><br><br>
+                <div><strong>Total:</strong> ${d.value.toLocaleString()} people</div><br><br>
+                <div><strong>Median:</strong> $${d.data.median.toLocaleString()}</div><br><br>
+                <div><strong>25th Percentile:</strong> $${d.data.p25.toLocaleString()}</div><br><br>
+                <div><strong>75th Percentile:</strong> $${d.data.p75.toLocaleString()}</div><br><br>
+                <div id="piechart"></div>
+                `);
+
+            d3.select("#piechart").selectAll("*").remove();
+
+            const pieData = [
+                {label: "Employed", value: d.data.employed || 1},
+                {label: "Unemployed", value: d.data.unemployed || 1}
+            ];
+
+            const total_employ = d.data.employed + d.data.unemployed;
+            const pieDataStr = [
+                {label: "Employed", value: ((d.data.employed / total_employ) * 100).toFixed(2) + "%" || 1},
+                {label: "Unemployed", value: ((d.data.unemployed / total_employ) * 100).toFixed(2) + "%" || 1}
+            ];
+
+            const w = 120, h = 120, r = 50;
+            const pieSvg = d3.select("#tooltip #piechart")
+                .append("svg")
+                .attr("width", w)
+                .attr("height", h)
+                .append("g")
+                .attr("transform", `translate(${w/2},${h/2})`);
+
+            const pie = d3.pie().value(d => d.value);
+            const arc = d3.arc().innerRadius(0).outerRadius(r);
+
+            pieSvg.selectAll("path")
+                .data(pie(pieData))
+                .enter()
+                .append("path")
+                .attr("d", arc)
+                .attr("fill", (d, i) => d3.schemeCategory10[i]);
+
+            const legend = d3.select("#tooltip #piechart")
+                .selectAll("div")
+                .data(pieDataStr)
+                .enter()
+                .append("div")
+                .style("display", "flex")
+                .style("align-items", "center")
+                .style("margin-bottom", "6px");
+
+            legend.append("span")
+                .style("display", "inline-block")
+                .style("width", "16px")
+                .style("height", "16px")
+                .style("margin-right", "8px")
+                .style("background", (d, i) => d3.schemeCategory10[i]);
+
+            legend.append("span")
+                .text(d => `${d.label}: ${d.value}`);
+
+            selectedRect = this;
+            });
+
   
       // Add tooltips for major labels
       nodes.append("title")
@@ -223,7 +245,6 @@ const extendedPastelBrightPalette = [
     });
   }
   
-  // Make sure your truncateText function is also included in your code scope:
   function truncateText(text, maxWidth, fontSize = 15, fontFamily = "sans-serif") {
     const tempText = d3.select("body").append("svg")
         .attr("width", 0).attr("height", 0)
@@ -242,5 +263,5 @@ const extendedPastelBrightPalette = [
     }
     tempText.remove();
     return (str.length < text.length) ? str + "…" : str;
-  }
+}
   
