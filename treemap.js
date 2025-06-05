@@ -60,10 +60,10 @@ const extendedPastelBrightPalette = [
         .sort((a, b) => b.value - a.value);
   
       // Treemap layout
-      const width = 3250, height = 1100; // Dimensions
+      const width = 2000, height = 950; // Dimensions
   
       // Custom tiling to make space for labels
-      const labelHeight = 20;
+      const labelHeight = 30;
       function treemapWithLabelSpace(node, x0, y0, x1, y1) {
         if (node.depth === 1) {
           y0 += labelHeight;
@@ -74,7 +74,7 @@ const extendedPastelBrightPalette = [
       d3.treemap()
         .tile(treemapWithLabelSpace)
         .size([width, height])
-        .padding(2)
+        .padding(4)
         (hierarchy);
   
       // Ensure the #treemap container allows horizontal filling and is centered
@@ -86,9 +86,9 @@ const extendedPastelBrightPalette = [
       // Select the treemap container
       const svg = d3.select("#treemap").append("svg")
         .attr("viewBox", [0, 0, width, height])
-        .attr("preserveAspectRatio", "xMinYMin meet")
+        //.attr("preserveAspectRatio", "xMinYMin meet")
         .style("width", "100%")
-        .style("height", "auto");
+        .style("height", "100%");
   
       // Draw category labels above each category
       svg.selectAll(".category-label")
@@ -99,12 +99,12 @@ const extendedPastelBrightPalette = [
         .attr("x", d => (d.x0 + d.x1) / 2)
         .attr("y", d => d.y0 + labelHeight / 2 + 8)
         .attr("text-anchor", "middle")
-        .attr("font-size", "15px")
+        .attr("font-size", "25px")
         .attr("font-weight", "bold")
         .attr("fill", "#fff")
         .text(function(d) {
           const maxWidth = d.x1 - d.x0 - 10;
-          return truncateText(d.data.name, maxWidth, 15);
+          return truncateText(d.data.name, maxWidth, 30);
         });
   
       let selectedRect = null;
@@ -237,23 +237,23 @@ const extendedPastelBrightPalette = [
         .html(`
           <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#222" flood-opacity="0.9"/>
         `);
-  
+      
       nodes.append("text")
         .attr("x", 4)
-        .attr("y", 16)
+        .attr("y", 20)
         .text(function(d) {
-          const fontSize = 12;
-          if ((d.y1 - d.y0) < fontSize + 5 || d.x1 - d.x0 < fontSize + 5) return "";
+          const fontSize = 20;
+          if ((d.y1 - d.y0) < fontSize + 23 || d.x1 - d.x0 < fontSize + 23) return "";
           const maxWidth = d.x1 - d.x0 - 8;
-          return truncateText(d.data.name, maxWidth, 12);
+          return truncateText(d.data.name, maxWidth, 20);
         })
-        .attr("font-size", "12px")
+        .attr("font-size", "20px")
         .attr("fill", "#fff")
         .attr("filter", "url(#text-shadow)");
     });
   }
   
-  function truncateText(text, maxWidth, fontSize = 15, fontFamily = "sans-serif") {
+  function truncateText(text, maxWidth, fontSize, fontFamily = "sans-serif") {
     const tempText = d3.select("body").append("svg")
         .attr("width", 0).attr("height", 0)
         .append("text")
@@ -272,4 +272,3 @@ const extendedPastelBrightPalette = [
     tempText.remove();
     return (str.length < text.length) ? str + "…" : str;
 }
-  

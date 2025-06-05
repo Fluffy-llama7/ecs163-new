@@ -59,18 +59,36 @@
     <!-- Visualization 1 -->
     <section id="viz1">
         <div class="container">
-            <div class="story-section">
-                <h2>Visualization 1: Overview</h2>
-                <p class="narrative-text">
-                    Let's begin exploring the dataset. To start, we present two bar graphs that highlight the top 10 most commonly picked college majors by total count of students/graduates from the major. These visuals offer a quick view of what fields are most popular among each gender, helping to reveal patterns in gender representation across different areas of study. This sets the stage for a deeper analysis into how these trends might relate to income, employment, and inequalities.
-                </p>
-                <div class="viz-container two-charts">
-                    <canvas id="barChartWomen" width="400" height="200"></canvas>
-                    <canvas id="barChartMen" width="400" height="200"></canvas>
-                </div>                  
+        <div class="story-section">
+            <h2>Visualization 1: Overview</h2>
+            <p class="narrative-text">
+            Let's begin exploring the dataset. To start, we present two bar graphs that highlight the top 10 most commonly picked college majors by total count of students/graduates from the major. These visuals offer a quick view of what fields are most popular among each gender, helping to reveal patterns in gender representation across different areas of study. This sets the stage for a deeper analysis into how these trends might relate to income, employment, and inequalities.
+            </p>
+    
+            <!-- Toggle Switch for switching views -->
+            <div style="text-align:center; margin-bottom: 20px;">
+                <label class="switch">
+                <input type="checkbox" id="toggleChartView" />
+                <span class="slider"></span>
+                </label>
+                <div id="toggleLabel" style="color:#fff; margin-top: 8px; font-weight: 600;">Separate View</div>
+            </div>
+            
+    
+            <!-- Chart containers -->
+            <div class="viz-container two-charts">
+            <canvas id="barChartWomen" width="400" height="200"></canvas>
+            <canvas id="barChartMen" width="400" height="200"></canvas>
+            </div>
+    
+            <!-- Combined chart container (initially hidden) -->
+            <div id="combinedChartContainer" class="viz-container" style="display: none;">
+            <canvas id="combinedChart" width="800" height="400"></canvas>
             </div>
         </div>
+        </div>
     </section>
+  
 
     <!-- Visualization 2 -->
     <section id="viz2">
