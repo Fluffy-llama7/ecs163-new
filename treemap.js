@@ -12,6 +12,7 @@ const extendedPastelBrightPalette = [
     "#d5f4e6"  // pale seafoam
   ];
   
+  //Function to draw our treemap (used in main.js)
   export function drawTreemap(){
     d3.csv("all-ages.csv").then(data => {
       // Convert "Total" and "Median" to numbers
@@ -71,6 +72,7 @@ const extendedPastelBrightPalette = [
         d3.treemapBinary(node, x0, y0, x1, y1);
       }
   
+      // Apply treemap layout
       d3.treemap()
         .tile(treemapWithLabelSpace)
         .size([width, height])
@@ -127,6 +129,7 @@ const extendedPastelBrightPalette = [
         .style("cursor", "pointer")
 
 
+        // Tooltip and selection behavior on click
         .on("click", function(event, d) {
             if (selectedRect === this) {
                 d3.select("#tooltip").style("display", "none");
@@ -135,6 +138,7 @@ const extendedPastelBrightPalette = [
                 return;
             }
 
+            // Reset previous selection
             d3.selectAll("rect").attr("stroke-width", 0);
             d3.select(this)
                 .attr("stroke", d => {
@@ -142,7 +146,7 @@ const extendedPastelBrightPalette = [
                 return d3.hsl(base.h, base.s, lightness(d.data.median) + 0.25).formatHsl();
                 })
                 .attr("stroke-width", 4);
-
+                // Tooltip placement logic
                 const tooltipWidth = 260;
                 const tooltipHeight = 200;
                 
@@ -159,7 +163,7 @@ const extendedPastelBrightPalette = [
                     top = event.clientY - tooltipHeight - 20;
                 }
                 
-
+            // Render tooltip HTML
             d3.select("#tooltip")
                 .style("display", "block")
                 .style("left", `${left}px`)
@@ -173,8 +177,10 @@ const extendedPastelBrightPalette = [
                 <div id="piechart"></div>
                 `);
 
+            // Clear previous pie chart if any
             d3.select("#piechart").selectAll("*").remove();
 
+            // Setup pie chart data (both for employed & unemployed)
             const pieData = [
                 {label: "Employed", value: d.data.employed || 1},
                 {label: "Unemployed", value: d.data.unemployed || 1}
@@ -186,6 +192,7 @@ const extendedPastelBrightPalette = [
                 {label: "Unemployed", value: ((d.data.unemployed / total_employ) * 100).toFixed(2) + "%" || 1}
             ];
 
+            // Draw mini pie chart inside tooltip
             const w = 120, h = 120, r = 50;
             const pieSvg = d3.select("#tooltip #piechart")
                 .append("svg")
@@ -204,6 +211,7 @@ const extendedPastelBrightPalette = [
                 .attr("d", arc)
                 .attr("fill", (d, i) => d3.schemeCategory10[i]);
 
+            // Add pie chart legend
             const legend = d3.select("#tooltip #piechart")
                 .selectAll("div")
                 .data(pieDataStr)
@@ -237,7 +245,8 @@ const extendedPastelBrightPalette = [
         .html(`
           <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="#222" flood-opacity="0.9"/>
         `);
-      
+    
+    // Add major labels inside each box (if space allows)
       nodes.append("text")
         .attr("x", 4)
         .attr("y", 20)
@@ -252,7 +261,7 @@ const extendedPastelBrightPalette = [
         .attr("filter", "url(#text-shadow)");
     });
   }
-  
+  // Truncates text with ellipsis if too wide for available space
   function truncateText(text, maxWidth, fontSize, fontFamily = "sans-serif") {
     const tempText = d3.select("body").append("svg")
         .attr("width", 0).attr("height", 0)

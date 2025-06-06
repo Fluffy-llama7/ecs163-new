@@ -5,6 +5,7 @@ export async function drawWomenAndMenBarCharts() {
     const topWomenMajors = [...data].sort((a, b) => b.Women - a.Women).slice(0, 10);
     const topMenMajors = [...data].sort((a, b) => b.Men - a.Men).slice(0, 10);
   
+    //Define all the labels & values to be used by each gender
     const womenLabels = topWomenMajors.map(d => d.Major);
     const womenValues = topWomenMajors.map(d => d.Women);
     const menLabels = topMenMajors.map(d => d.Major);
@@ -16,6 +17,7 @@ export async function drawWomenAndMenBarCharts() {
     const combinedWomenValues = topCombinedMajors.map(d => d.Women);
     const combinedMenValues = topCombinedMajors.map(d => d.Men);
   
+    // This will track the currently active Chart.js instance 
     let currentChart = null;
   
     const destroyChart = () => {
@@ -25,6 +27,7 @@ export async function drawWomenAndMenBarCharts() {
       }
     };
   
+    // Create the bar chart for top 10 majors by number of women
     const createWomenChart = () => {
       new Chart(document.getElementById('barChartWomen').getContext('2d'), {
         type: 'bar',
@@ -74,6 +77,7 @@ export async function drawWomenAndMenBarCharts() {
       });
     };
   
+    // Create the bar chart for top 10 majors by number of men
     const createMenChart = () => {
       new Chart(document.getElementById('barChartMen').getContext('2d'), {
         type: 'bar',
@@ -123,7 +127,9 @@ export async function drawWomenAndMenBarCharts() {
       });
     };
   
+    // Create a grouped bar chart combining women and men values by major (this is what we siwtch to in the toggle)
     const createCombinedChart = () => {
+    // Ensure only one chart is active
       destroyChart();
       const ctx = document.getElementById('combinedChart').getContext('2d');
       currentChart = new Chart(ctx, {
@@ -181,6 +187,7 @@ export async function drawWomenAndMenBarCharts() {
       });
     };
   
+    //Observe when an element enters the viewport, then call its callback once
     const createObserver = (elementId, callback) => {
       const el = document.getElementById(elementId);
       if (!el) return;
@@ -188,7 +195,9 @@ export async function drawWomenAndMenBarCharts() {
       const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
+            // Call chart only when visible
             callback();
+            // Stop observing once chart is rendered
             obs.unobserve(entry.target);
           }
         });
@@ -197,6 +206,7 @@ export async function drawWomenAndMenBarCharts() {
       observer.observe(el);
     };
   
+    // To show the separate charts (men and women)
     const drawSeparateCharts = () => {
       destroyChart();
       document.getElementById("barChartWomen").style.display = "block";
@@ -206,6 +216,7 @@ export async function drawWomenAndMenBarCharts() {
       createObserver("barChartMen", createMenChart);
     };
   
+    // To show the combined grouped chart
     const drawCombinedChart = () => {
       document.getElementById("barChartWomen").style.display = "none";
       document.getElementById("barChartMen").style.display = "none";
@@ -220,25 +231,35 @@ export async function drawWomenAndMenBarCharts() {
     const toggleBtn = document.getElementById("toggleChartView");
     let isCombinedView = false;
   
+    // Add a click event listener to the toggle button  
     toggleBtn.addEventListener("click", () => {
+        // Toggle the view state ->  if currently combined, switch to separate
+        //if separate -> switch to combined
       isCombinedView = !isCombinedView;
+
+      // Update the button's label
       toggleBtn.textContent = isCombinedView
         ? "Switch to Separate Charts"
         : "Switch to Combined View";
+
+        // Based on the updated view state, render the appropriate chart(s)
       if (isCombinedView) {
         drawCombinedChart();
       } else {
         drawSeparateCharts();
       }
 
+      // Re-select the toggle switch and label by ID every time the button is clicked.
       const toggleSwitch = document.getElementById('toggleChartView');
       const toggleLabel = document.getElementById('toggleLabel');
       
       toggleSwitch.addEventListener('change', () => {
+        // If the checkbox is checked, show combined chart and update label
         if (toggleSwitch.checked) {
           toggleLabel.textContent = 'Combined View';
           drawCombinedChart();
         } else {
+        // Otherwise, show separate charts and update label
           toggleLabel.textContent = 'Separate View';
           drawSeparateCharts();
         }

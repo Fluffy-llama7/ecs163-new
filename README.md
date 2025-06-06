@@ -20,16 +20,24 @@ To run this project locally:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/[your-org-or-username]/ecs163-college-majors.git
-   cd ecs163-college-majors
+   git clone https://github.com/Fluffy-llama7/ecs163-new
+   cd ecs163-new
    ```
 
-2. Open the main HTML file in your browser:
+2. To run the project you can either:
+
    ```bash
    open index.html
    ```
 
-There are no dependencies, just standard web technologies (HTML, CSS, JavaScript, D3.js).
+   OR if you are using vscode with the live server extension
+
+   ```bash
+   right click index.html and select open with liver server
+   ```
+
+
+There are no dependencies, just standard web technologies (HTML, CSS, JavaScript, D3.js, Chart.js).
 
 ---
 
