@@ -33,7 +33,7 @@ To run this project locally:
    OR if you are using vscode with the live server extension
 
    ```bash
-   right click index.html and select open with liver server
+   right click index.html and select open with live server
    ```
 
 
