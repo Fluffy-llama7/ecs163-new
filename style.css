@@ -7,7 +7,7 @@
 }
 
 html {
-    scroll-behavior: smooth;
+    scroll-behavior: smooth; /* Smooth scrolling between anchor links */
 }
 
 .major-filter {
@@ -59,7 +59,7 @@ input:checked + .slider:before {
     transform: translateX(26px);
 }
 
-  
+/* Gradient Text for Special Headings */
 .beam-text {
     font-size: 3rem;
     font-weight: 700;
